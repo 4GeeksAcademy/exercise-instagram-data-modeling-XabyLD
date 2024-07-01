@@ -8,6 +8,15 @@ from eralchemy2 import render_er
 Base = declarative_base()
 
 
+
+class Follower(Base):
+    __tablename__ = "follower"
+    user_from_id= Column(Integer, ForeignKey('user.id'), nullable = False, primary_key = True)
+    user_to_id = Column(Integer,ForeignKey('user.id'), nullable = False, primary_key = True)
+    
+    
+
+
 class User(Base):
     __tablename__ = 'user'
     # Here we define columns for the table person
@@ -16,15 +25,19 @@ class User(Base):
     username = Column(String(250), nullable=False)
     firstname = Column(String(250), nullable=False)
     lastname = Column(String(250), nullable=False)
-    email = Column(String(250),unique=True)
+    email = Column(String(250),unique=True, nullable = False)
+
+    followed = relationship(
+        'User',
+        secondary= 'Follower',
+        primaryjoin = (Follower.user_from_id == id),
+        secondaryjoin = (Follower.user_to_id == id),
+        backref="following",
+        lazy='dynamic'
+    )
 
 
-class Follower(Base):
-    __tablename__ = "follower"
-    user_from_id= Column(Integer, ForeignKey('user.id'), nullable = False)
-    user_to_id = Column(Integer,ForeignKey('user.id'), nullable = False)
-    follower = relationship(User)
-    
+
 
 
 class Post(Base):
@@ -35,7 +48,7 @@ class Post(Base):
 
 class Media(Base):
     __tablename__ = "media"
-    id = Column(Integer)
+    id = Column(Integer, primary_key = True)
     type= Column(Enum)
     url = Column(String)
     post_id = Column(Integer, ForeignKey('post.id'), nullable = False)
