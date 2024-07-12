@@ -62,8 +62,6 @@ class Comment(Base):
     comment_text = Column(String(250))
     author_id = Column(Integer , ForeignKey('user.id'), nullable = False)
     post_id = Column(Integer, ForeignKey('post.id'), nullable = False )
-    #person_id = Column(Integer, ForeignKey('person.id'))
-    #person = relationship(Person)
     comment_user = relationship(User)
     comment_post = relationship(Post)
 
