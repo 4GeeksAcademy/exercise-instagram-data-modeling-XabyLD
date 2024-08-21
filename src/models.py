@@ -44,7 +44,7 @@ class Post(Base):
     __tablename__ = "post"
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable = False)
-    post = relationship(User)
+    media = relationship('Media', backref='user' , lazy="True")
 
 class Media(Base):
     __tablename__ = "media"
@@ -52,7 +52,7 @@ class Media(Base):
     type= Column(Enum)
     url = Column(String)
     post_id = Column(Integer, ForeignKey('post.id'), nullable = False)
-    media = relationship(Post)
+   
 
 class Comment(Base):
     __tablename__ = 'comment'
